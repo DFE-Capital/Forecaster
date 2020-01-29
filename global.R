@@ -23,6 +23,11 @@ if ( all(list.files() != ukdata))  warning('You are in the wrong folder or the d
 ukdata <- read.csv(ukdata,
                    header = TRUE)  # in tidy dataframe format, one row per observation
 
+ukdata$date <- tolower(ukdata$date)
+ukdata$date <- paste("13", substr(ukdata$date, 1,3), substr(ukdata$date, 5,6), sep = "")
+ukdata$date <- as.yearqtr(as.Date(ukdata$date, "%d%b%y"))
+
+
 # SOURCES -----------------------------------------------------------------
 #  TPI   UK BCIS subscription, Adam Bray or Vicky Brooks
 #  RPIX  https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/chmk/mm23
@@ -51,7 +56,7 @@ zoo.to.data.frame <- function(x, index.name="Date") {
 
 #ZRA custom
 #  changed startvalue <- end(data) + 1 due to quarterly data
-zra_custom <- function(data, FP = 10, SL = c(0.8, 0.95), ...) 
+zra_custom <- function(data, FP = 10, SL = c(0.8, 0.95), ...)
 {
   startvalue <- end(data) + 0.25
   f <- frequency(data)
@@ -68,9 +73,9 @@ zra_custom <- function(data, FP = 10, SL = c(0.8, 0.95), ...)
       result$SL <- SL
       result$FP <- FP
       if (length(SL) == 1) {
-        up1 <- ts(prognose$upper[, 1], start = startvalue, 
+        up1 <- ts(prognose$upper[, 1], start = startvalue,
                   frequency = f)
-        low1 <- ts(prognose$lower[, 1], start = startvalue, 
+        low1 <- ts(prognose$lower[, 1], start = startvalue,
                    frequency = f)
         fit1 <- (up1 + low1)/2
         result$up1 <- up1
@@ -79,14 +84,14 @@ zra_custom <- function(data, FP = 10, SL = c(0.8, 0.95), ...)
         result$piv1 <- cbind(fit1, up1, low1)
       }
       if (length(SL) == 2) {
-        up1 <- ts(prognose$upper[, 1], start = startvalue, 
+        up1 <- ts(prognose$upper[, 1], start = startvalue,
                   frequency = f)
-        low1 <- ts(prognose$lower[, 1], start = startvalue, 
+        low1 <- ts(prognose$lower[, 1], start = startvalue,
                    frequency = f)
         fit1 <- (up1 + low1)/2
-        up2 <- ts(prognose$upper[, 2], start = startvalue, 
+        up2 <- ts(prognose$upper[, 2], start = startvalue,
                   frequency = f)
-        low2 <- ts(prognose$lower[, 2], start = startvalue, 
+        low2 <- ts(prognose$lower[, 2], start = startvalue,
                    frequency = f)
         fit2 <- (up2 + low2)/2
         result$up1 <- up1
