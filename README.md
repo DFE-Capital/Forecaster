@@ -1,7 +1,7 @@
 # App-forecast
 Time series forecasting for common inflators and economic indices using the forecast package in R.
 
-https://dfe-capital.shinyapps.io/inflation_app/
+https://dfe-capital.shinyapps.io/Forecaster
 
 #  Purpose
 Forecasting using standard time series methods a range of commonly used indices used by the EFA to assist in predicitng future costs and or
